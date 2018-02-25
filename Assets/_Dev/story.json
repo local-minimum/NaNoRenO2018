@@ -1,0 +1,16 @@
+{
+  "characters": [
+    {
+      "id": "test",
+      "name": "Hello",
+      "avatar": "",
+      "color": "#abff01"
+    },
+    {
+      "id": "test2",
+      "name": "World []",
+      "avatar": "",
+      "color": "#abff0112"
+    }
+  ]
+}

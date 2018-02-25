@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace VizNov
 {
@@ -12,10 +13,8 @@ namespace VizNov
 
         void Start()
         {
-            //Domain.Character someone = JsonUtility.FromJson<Domain.Character>(file.text);
-            Debug.Log(JsonUtility.ToJson(new Domain.Character("test", "Hello", null, "#a0f")));
-            var c = Domain.Character.LoadFromJSON("{\"_id\":\"test\",\"_name\":\"Hello\",\"_avatarName\":\"\",\"_colorName\":\"#a0f\"}");
-            Debug.Log(c.color.ToString());
+            var s = Domain.Story.LoadFromJSON(file.text);
+            Debug.Log(string.Join(", ", s.Characters.Select(c => c.Name).ToArray()));
         }
     }
 }

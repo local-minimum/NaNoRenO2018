@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace VizNov.Domain {
     static class CharacterColors
@@ -19,11 +20,12 @@ namespace VizNov.Domain {
             if (colorLength == 3 || colorLength == 4)
             {
                 step = 1;
-            } else if (colorLength != 6 || colorLength != 8)
+            } else if (!(colorLength == 3 * step || colorLength == 4 * step))
             {
+                Debug.Log(colorLength);
                 throw new System.ArgumentException(
                     string.Format(
-                        "Only supports format [#fff, #fffff, #ffff, #ffffffff], not {}", colorName)
+                        "Only supports format [#fff, #fffff, #ffff, #ffffffff], not {0}", colorName)
                 );
             }
             int[] arr = new int[4];
@@ -67,44 +69,42 @@ namespace VizNov.Domain {
     [System.Serializable]
     public struct Character {
 
-        bool _loaded;
-
         [SerializeField]
-        private string _id;
-        public string id
+        private string id;
+        public string Id
         {
             get
             {
-                return _id;
+                return id;
             }
         }
 
         [SerializeField]
-        private string _name;
-        public string name
+        private string name;
+        public string Name
         {
             get
             {
-                return _name;
+                return name;
             }
         }
 
         [SerializeField]
-        private string _avatarName;
+        private string avatar;
 
-        private Sprite _avatar;
-        public Sprite avatar
+        private Sprite _avatarSprite;
+        public Sprite Avatar
         {
             get
             {
-                return _avatar;
+                return _avatarSprite;
             }
         }
 
         [SerializeField]
-        private string _colorName;
+        private string color;
         private Color32 _color;
-        public Color32 color
+        public Color32 Color
         {
             get
             {
@@ -114,42 +114,47 @@ namespace VizNov.Domain {
 
         public Character(string id, string name, string avatar)
         {
-            _id = id;
-            _name = name;
-            _avatarName = avatar;
-            _avatar = Resources.Load<Sprite>(avatar);
-            _colorName = null;
+            this.id = id;
+            this.name = name;
+            this.avatar = avatar;
+            _avatarSprite = Resources.Load<Sprite>(avatar);
+            color = null;
             _color = CharacterColors.Get(id);
-            _loaded = true;
         }
 
         public Character(string id, string name, string avatar, string color)
         {
-            _id = id;
-            _name = name;
-            _avatarName = avatar;
-            _avatar = Resources.Load<Sprite>(avatar);
-            _colorName = color;
+            this.id = id;
+            this.name = name;
+            this.avatar = avatar;
+            _avatarSprite = Resources.Load<Sprite>(avatar);
+            this.color = color;
             _color = CharacterColors.Load(id, color);
-            _loaded = true;
         }
 
         public Character(Character template)
         {
-            _id = template._id;
-            _name = template._name;
-            _avatarName = template._avatarName;
-            _avatar = Resources.Load<Sprite>(_avatarName);
-            _colorName = template._colorName;
-            _color = CharacterColors.Load(_id, template._colorName);
-            _loaded = true;
+            id = template.id;
+            name = template.name;
+            avatar = template.avatar;
+            _avatarSprite = Resources.Load<Sprite>(avatar);
+            color = template.color;
+            _color = CharacterColors.Load(id, template.color);
+        }
+
+        public Character(Dictionary<string, string> tmp)
+        {
+            id = tmp["id"];
+            name = tmp["name"];
+            avatar = tmp["avatar"];
+            _avatarSprite = Resources.Load<Sprite>(avatar);
+            color = tmp.ContainsKey("color") ? tmp["color"] : "";
+            _color = CharacterColors.Load(id, color);            
         }
 
         public static Character LoadFromJSON(string json)
         {
-            return new Character(JsonUtility.FromJson<Character>(json));
-        }
-
-        
+            return new Character(JsonHelper.LoadObject(json));
+        }        
     }
 }
