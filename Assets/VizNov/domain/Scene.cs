@@ -40,6 +40,16 @@ namespace VizNov.Domain
             }
         }
 
+        string texts;
+        Text[] _texts;
+        Text[] Texts
+        {
+            get
+            {
+                return _texts;
+            }
+        }
+
         public Scene(Dictionary<string, string> tmp)
         {
             id = tmp["id"];
@@ -60,6 +70,15 @@ namespace VizNov.Domain
             {
                 image = "";
                 _image = null;
+            }
+            if (tmp.ContainsKey("texts"))
+            {
+                texts = tmp["texts"];
+                _texts = Text.LoadManyFromJSON(texts);
+            } else
+            {
+                texts = "";
+                _texts = new Text[0];
             }
         }
 
