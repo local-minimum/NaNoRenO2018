@@ -111,37 +111,7 @@ namespace VizNov.Domain {
                 return _color;
             }
         }
-
-        public Character(string id, string name, string avatar)
-        {
-            this.id = id;
-            this.name = name;
-            this.avatar = avatar;
-            _avatarSprite = Resources.Load<Sprite>(avatar);
-            color = null;
-            _color = CharacterColors.Get(id);
-        }
-
-        public Character(string id, string name, string avatar, string color)
-        {
-            this.id = id;
-            this.name = name;
-            this.avatar = avatar;
-            _avatarSprite = Resources.Load<Sprite>(avatar);
-            this.color = color;
-            _color = CharacterColors.Load(id, color);
-        }
-
-        public Character(Character template)
-        {
-            id = template.id;
-            name = template.name;
-            avatar = template.avatar;
-            _avatarSprite = Resources.Load<Sprite>(avatar);
-            color = template.color;
-            _color = CharacterColors.Load(id, template.color);
-        }
-
+    
         public Character(Dictionary<string, string> tmp)
         {
             id = tmp["id"];
@@ -154,7 +124,13 @@ namespace VizNov.Domain {
 
         public static Character LoadFromJSON(string json)
         {
-            return new Character(JsonHelper.LoadObject(json));
-        }        
+            return new Character(JsonLoader.LoadObject(json));
+        }
+
+        public static Character[] LoadManyFromJSON(string characters)
+        {
+            return JsonLoader.LoadArr(characters).Select(e => LoadFromJSON(e)).ToArray();
+        }
+
     }
 }
