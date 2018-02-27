@@ -213,10 +213,9 @@ namespace VizNov
         [SerializeField]
         TextAsset file;
 
-        void Start()
+        public Domain.Story GetStory()
         {
-            var s = Domain.Story.LoadFromJSON(file.text);
-            Debug.Log(string.Join(", ", s.Characters.Select(c => c.Name).ToArray()));
+            return Domain.Story.LoadFromJSON(file.text);
         }
     }
 }
