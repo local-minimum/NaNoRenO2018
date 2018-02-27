@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace VizNov.Domain
 {
-    public struct Text
+    public class Text
     {
         private string actor;
         public string Actor

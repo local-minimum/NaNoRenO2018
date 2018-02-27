@@ -67,7 +67,7 @@ namespace VizNov.Domain {
     }
 
     [System.Serializable]
-    public struct Character {
+    public class Character {
 
         [SerializeField]
         private string id;

@@ -6,7 +6,7 @@ using System.Linq;
 namespace VizNov.Domain
 {
     [System.Serializable]
-    public struct Story
+    public class Story
     {
         [SerializeField]
         string characters;
