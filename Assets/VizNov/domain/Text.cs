@@ -32,12 +32,12 @@ namespace VizNov.Domain
 
         public static Text LoadFromJSON(string json)
         {
-            return new Text(JsonLoader.LoadObject(json));
+            return new Text(IO.JsonLoader.LoadObject(json));
         }
 
         public static Text[] LoadManyFromJSON(string json)
         {
-            return JsonLoader.LoadArr(json).Select(e => Text.LoadFromJSON(e)).ToArray();
+            return IO.JsonLoader.LoadArr(json).Select(e => Text.LoadFromJSON(e)).ToArray();
         }
     }
 }

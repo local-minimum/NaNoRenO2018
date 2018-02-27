@@ -84,12 +84,12 @@ namespace VizNov.Domain
 
         public static Scene LoadFromJSON(string json)
         {
-            return new Scene(JsonLoader.LoadObject(json));
+            return new Scene(IO.JsonLoader.LoadObject(json));
         }
 
         public static Scene[] LoadManyFromJSON(string json)
         {
-            return JsonLoader.LoadArr(json).Select(e => LoadFromJSON(e)).ToArray();
+            return IO.JsonLoader.LoadArr(json).Select(e => LoadFromJSON(e)).ToArray();
         }
     }
 }

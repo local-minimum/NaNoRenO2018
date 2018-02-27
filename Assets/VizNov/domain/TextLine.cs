@@ -41,12 +41,12 @@ namespace VizNov.Domain
 
         public static TextLine LoadFromJSON(string json)
         {
-            return new TextLine(JsonLoader.LoadObject(json));
+            return new TextLine(IO.JsonLoader.LoadObject(json));
         }
 
         public static TextLine[] LoadManyFromJSON(string json)
         {
-            return JsonLoader.LoadArr(json).Select(e => TextLine.LoadFromJSON(e)).ToArray();
+            return IO.JsonLoader.LoadArr(json).Select(e => TextLine.LoadFromJSON(e)).ToArray();
         }
     }
 }

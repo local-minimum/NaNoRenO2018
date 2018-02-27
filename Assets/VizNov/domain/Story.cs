@@ -54,7 +54,7 @@ namespace VizNov.Domain
 
         public static Story LoadFromJSON(string json)
         {
-            return new Story(JsonLoader.LoadObject(json));
+            return new Story(IO.JsonLoader.LoadObject(json));
         }
     }
 }

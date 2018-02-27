@@ -124,12 +124,12 @@ namespace VizNov.Domain {
 
         public static Character LoadFromJSON(string json)
         {
-            return new Character(JsonLoader.LoadObject(json));
+            return new Character(IO.JsonLoader.LoadObject(json));
         }
 
         public static Character[] LoadManyFromJSON(string characters)
         {
-            return JsonLoader.LoadArr(characters).Select(e => LoadFromJSON(e)).ToArray();
+            return IO.JsonLoader.LoadArr(characters).Select(e => LoadFromJSON(e)).ToArray();
         }
 
     }

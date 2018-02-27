@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-namespace VizNov
+namespace VizNov.IO
 {
     public class JsonLoader : MonoBehaviour
     {
@@ -208,7 +208,6 @@ namespace VizNov
             }
             return obj;
         }
-
 
         [SerializeField]
         TextAsset file;
