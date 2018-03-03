@@ -49,11 +49,23 @@ namespace VizNov.Domain
             {
                 scenes = "";
                 _scenes = new Scene[0];
+                Debug.Log("No scene");
+                foreach (string k in tmp.Keys)
+                {
+                    Debug.Log(string.Format("{0} => {1}", k, tmp[k]));
+                }
+            }
+            string[] acceptedKeys = new string[] { "scenes", "characters" };
+            string[] extras = tmp.Keys.Where(k => !acceptedKeys.Contains(k)).ToArray();
+            if (extras.Length > 0)
+            {
+                Debug.LogWarning(string.Format("{0} got extra keys: {1}", this, string.Join(", ", extras)));
             }
         }
 
         public static Story LoadFromJSON(string json)
         {
+            Debug.Log(json);
             return new Story(IO.JsonLoader.LoadObject(json));
         }
     }

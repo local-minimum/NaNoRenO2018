@@ -44,7 +44,7 @@ namespace VizNov.Viz
         public event StoryEvent OnStory;
 
         Domain.Story story;
-        int nextSceneIndex = 0;
+        int nextSceneIndex = -1;
         Domain.Scene scene;
 
         private void Start()
@@ -106,7 +106,7 @@ namespace VizNov.Viz
                 EmitStory(EventType.Start);
                 EmitStoryCharacters(EventType.Start);
                 nextSceneIndex = 0;
-                waiting = true;
+                waiting = false;
             } else {
                 if (scene != null)
                 {
@@ -115,6 +115,7 @@ namespace VizNov.Viz
                 scene = story.Scenes[nextSceneIndex];
                 nextSceneIndex++;
                 EmitScene(EventType.Start);
+                waiting = true;
             }
         }
     }

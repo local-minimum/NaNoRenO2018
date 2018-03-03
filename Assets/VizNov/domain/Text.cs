@@ -17,16 +17,34 @@ namespace VizNov.Domain
         }
 
         private string lines;
-        
+        private TextLine[] _lines;
+        public TextLine[] Lines
+        {
+            get
+            {
+                return _lines;
+            }
+        }
+
         public Text(Dictionary<string, string> tmp)
         {
-            actor = tmp["actor"];
             if (tmp.ContainsKey("lines"))
             {
                 lines = tmp["lines"];
+                _lines = TextLine.LoadManyFromJSON(lines);
             } else
             {
                 lines = "";
+                _lines = new TextLine[0];
+                Debug.LogWarning(string.Format("Empty conversation {0}", this));
+            }
+            if (tmp.ContainsKey("actor"))
+            {
+                actor = tmp["actor"];
+            }
+            else
+            {
+                Debug.LogError(string.Format("No one is saying: {1}", lines));
             }
         }
 

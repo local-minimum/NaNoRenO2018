@@ -32,7 +32,7 @@ namespace VizNov.Domain
         [SerializeField]
         string image;
         Sprite _image;
-        Sprite Image
+        public Sprite Image
         {
             get
             {
@@ -42,7 +42,7 @@ namespace VizNov.Domain
 
         string texts;
         Text[] _texts;
-        Text[] Texts
+        public Text[] Texts
         {
             get
             {
@@ -52,7 +52,13 @@ namespace VizNov.Domain
 
         public Scene(Dictionary<string, string> tmp)
         {
-            id = tmp["id"];
+            if (tmp.ContainsKey("id"))
+            {
+                id = tmp["id"];
+            } else
+            {
+                Debug.LogError(string.Format("Scene {0} got no id.", this));
+            }
             if (tmp.ContainsKey("characters"))
             {
                 characters = tmp["characters"];

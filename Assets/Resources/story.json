@@ -12,7 +12,7 @@
       "image": "sprites/characters/ai"
     }
   ],
-  "Scenes": [
+  "scenes": [
     {
       "id": "hallway 12/2",
       "characters": [
@@ -22,7 +22,7 @@
           "image": "sprites/characters/potPlant"
         }
       ],
-      "image": "sprites/scenes/hallway"
+      "image": "sprites/scenes/hallway",
       "texts": [
         {
           "actor": "ai:unknown",
@@ -47,7 +47,7 @@
               "text": "Maybe you’re not getting enough light?"
             },
             {
-              "delay": 0.5
+              "delay": 0.5,
               "text": "I’m Vacuum C212 by the way."
             }
           ]

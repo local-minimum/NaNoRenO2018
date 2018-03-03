@@ -45,6 +45,15 @@ namespace VizNov.IO
             return idx == idxDeeper + 1 && idxDeeper >= 0;
         }
 
+        static bool isNumber(string s)
+        {
+            if (s.Length == 0 || s.Count(e => e == '.') > 1)
+            {
+                return false;
+            }
+            return s.All(e => "123456789.".Contains(e));
+        }
+
         static string Indent(string json)
         {
             string[] lines = json.Split('\n');
@@ -129,6 +138,7 @@ namespace VizNov.IO
             List<char> stack = new List<char>();
             bool escapeNext = false;
             int itemStart = 0;
+            bool itemStarted = false;
             int keyStart = 0;
             string key = "";
             bool nextIsKey = false;
@@ -170,6 +180,7 @@ namespace VizNov.IO
                         else if (stack.Count == 1 && cur == ':')
                         {
                             nextIsKey = false;
+                            itemStarted = false;
                         }
                     }
                     else
@@ -202,6 +213,25 @@ namespace VizNov.IO
                             {
                                 nextIsKey = true;
                             }
+                        } else if (cur != ' ')
+                        {
+                            if (itemStarted)
+                            {
+                                string substr = json.Substring(itemStart, idx - itemStart).Trim();
+                                bool numerical = isNumber(substr);
+                                if (cur == '\n' && numerical)
+                                {
+                                    obj[key] = substr;
+                                    nextIsKey = true;
+                                }
+                            } else
+                            {
+                                itemStarted = "0123456789.".Contains(cur);
+                                if (itemStarted)
+                                {
+                                    itemStart = idx;
+                                }
+                            }
                         }
                     }
                 }
@@ -212,9 +242,12 @@ namespace VizNov.IO
         [SerializeField]
         TextAsset file;
 
+        [SerializeField]
+        TmpStory storyText;
+
         public Domain.Story GetStory()
         {
-            return Domain.Story.LoadFromJSON(file.text);
+            return Domain.Story.LoadFromJSON(storyText.Text);
         }
     }
 }
