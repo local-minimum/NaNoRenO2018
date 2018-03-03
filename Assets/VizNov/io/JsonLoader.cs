@@ -51,7 +51,7 @@ namespace VizNov.IO
             {
                 return false;
             }
-            return s.All(e => "123456789.".Contains(e));
+            return s.All(e => "0123456789.".Contains(e));
         }
 
         public static string Indent(string json)
@@ -225,7 +225,6 @@ namespace VizNov.IO
                                     obj[key] = substr;
                                     nextIsKey = true;
                                     itemStarted = false;
-                                    Debug.Log(string.Format("Found a number {0}: {1}", key, substr));
                                 }
                             } else
                             {
