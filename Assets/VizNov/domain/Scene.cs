@@ -55,9 +55,6 @@ namespace VizNov.Domain
             if (tmp.ContainsKey("id"))
             {
                 id = tmp["id"];
-            } else
-            {
-                Debug.LogError(string.Format("Scene {0} got no id.", this));
             }
             if (tmp.ContainsKey("characters"))
             {
@@ -88,9 +85,25 @@ namespace VizNov.Domain
             }
         }
 
+        void LogIssues(string json)
+        {
+            bool issues = false;
+            if (string.IsNullOrEmpty(id))
+            {
+                Debug.LogError("Scene got no id.");
+                issues = true;
+            }
+            if (issues)
+            {
+                Debug.Log(string.Format("^Above issues from: {0}", json));
+            }
+        }
+
         public static Scene LoadFromJSON(string json)
         {
-            return new Scene(IO.JsonLoader.LoadObject(json));
+            Scene s = new Scene(IO.JsonLoader.LoadObject(json));
+            s.LogIssues(json);
+            return s;
         }
 
         public static Scene[] LoadManyFromJSON(string json)

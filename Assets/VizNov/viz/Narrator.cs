@@ -50,6 +50,7 @@ namespace VizNov.Viz
         private void Start()
         {
             story = GetComponent<IO.JsonLoader>().GetStory();
+            Debug.Log(string.Format("Loaded story:\n{0}", story.ToJSON()));
         }
 
         void EmitStoryCharacters(EventType type)

@@ -133,33 +133,57 @@ namespace VizNov.Domain {
             if (tmp.ContainsKey("name"))
             {
                 name = tmp["name"];
-            } else
-            {
-                Debug.LogWarning(string.Format("Character {0} got no name", this));
             }
             if (tmp.ContainsKey("avatar"))
             {
                 avatar = tmp["avatar"];
-            } else
-            {
-                Debug.Log(string.Format("Character {0} got no avatar", this));
             }
             if (tmp.ContainsKey("id"))
             {
                 id = tmp["id"];
-            }
-            else
-            {
-                Debug.LogError(string.Format("Character '{0}' got no id", name));
             }
             _avatarSprite = Resources.Load<Sprite>(avatar);
             color = tmp.ContainsKey("color") ? tmp["color"] : "";
             _color = CharacterColors.Load(id, color);            
         }
 
+        void LogIssues(string json)
+        {
+            bool issues = false;
+            if (string.IsNullOrEmpty(name))
+            {
+                Debug.LogError("Character got no name");
+                issues = true;
+            }
+            if (string.IsNullOrEmpty(avatar))
+            {
+                Debug.Log("Character got no avatar");
+            }
+
+            if (string.IsNullOrEmpty(id))
+            {
+                Debug.LogError("Character got no id");
+                issues = true;
+            }
+            if (issues)
+            {
+                Debug.Log(string.Format("^Above issues from: {0}", json));
+            }
+        }
+
+        public string ToJSON()
+        {
+            string sid = string.IsNullOrEmpty(id) ? "" : id;
+            string sname = string.IsNullOrEmpty(name) ? "" : name;
+            string ret = "{\n" + string.Format("\"id\": \"{0}\",\n\"name\": \"{1}\"", id, name);
+            return IO.JsonLoader.Indent(ret + "\n}");
+        }
+
         public static Character LoadFromJSON(string json)
         {
-            return new Character(IO.JsonLoader.LoadObject(json));
+            Character c = new Character(IO.JsonLoader.LoadObject(json));
+            c.LogIssues(json);
+            return c;
         }
 
         public static Character[] LoadManyFromJSON(string characters)

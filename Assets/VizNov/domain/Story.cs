@@ -68,5 +68,38 @@ namespace VizNov.Domain
             Debug.Log(json);
             return new Story(IO.JsonLoader.LoadObject(json));
         }
+
+        public string ToJSON()
+        {
+            string ret = "{";
+            bool isListing = false;
+            string characters = string.Join(",\n", Characters.Select(c => c.ToJSON()).ToArray());
+            if (!string.IsNullOrEmpty(characters))
+            {
+                ret += string.Format("\n\"characters\": [\n{0}\n]", characters);
+                isListing = true;
+            }
+            string scenes = string.Join(",\n", Scenes.Select(s => s.ToString()).ToArray());
+            if (!string.IsNullOrEmpty(scenes))
+            {
+                if (isListing)
+                {
+                    ret += ",\n";
+                } else
+                {
+                    ret += "\n";
+                }
+                ret += string.Format("\"scenes\": [\n{0}\n]", scenes);
+                isListing = true;
+            }
+            if (isListing)
+            {
+                return IO.JsonLoader.Indent(ret + "\n}");
+            } else
+            {
+                return ret + "}";
+            }
+            
+        }
     }
 }

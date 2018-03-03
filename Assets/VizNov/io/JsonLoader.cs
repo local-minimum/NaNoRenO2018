@@ -54,7 +54,7 @@ namespace VizNov.IO
             return s.All(e => "123456789.".Contains(e));
         }
 
-        static string Indent(string json)
+        public static string Indent(string json)
         {
             string[] lines = json.Split('\n');
             int indent = 0;
@@ -213,16 +213,19 @@ namespace VizNov.IO
                             {
                                 nextIsKey = true;
                             }
-                        } else if (cur != ' ')
+                        }
+                        else if (stack.Count == 1)
                         {
                             if (itemStarted)
                             {
                                 string substr = json.Substring(itemStart, idx - itemStart).Trim();
                                 bool numerical = isNumber(substr);
-                                if (cur == '\n' && numerical)
+                                if ((cur == '\n' || cur == ',') && numerical)
                                 {
                                     obj[key] = substr;
                                     nextIsKey = true;
+                                    itemStarted = false;
+                                    Debug.Log(string.Format("Found a number {0}: {1}", key, substr));
                                 }
                             } else
                             {

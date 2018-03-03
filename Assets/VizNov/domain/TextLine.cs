@@ -28,20 +28,40 @@ namespace VizNov.Domain
 
         public TextLine(Dictionary<string, string> tmp)
         {
-            text = tmp["text"];
+            if(tmp.ContainsKey("text"))
+            {
+                text = tmp["text"];
+            }
+            
             if (tmp.ContainsKey("delay"))
             {
-                delay = float.Parse(tmp["delay"]);
+                //Debug.Log(string.Format("delay: '{0}'", tmp["delay"]));
+                try
+                {
+                    delay = float.Parse(tmp["delay"]);
+                } catch (System.FormatException)
+                {
+                    Debug.LogError(string.Format("Trying to set delay to: '{0}'", tmp["delay"]));
+                }
             }
             else
             {
                 delay = 0f;
             }
         }
+        void LogIssues(string json)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                Debug.LogError(string.Format("No text in text-line: {0}", json));
+            }
+        }
 
         public static TextLine LoadFromJSON(string json)
         {
-            return new TextLine(IO.JsonLoader.LoadObject(json));
+            TextLine tl = new TextLine(IO.JsonLoader.LoadObject(json));
+            tl.LogIssues(json);
+            return tl;
         }
 
         public static TextLine[] LoadManyFromJSON(string json)

@@ -113,6 +113,11 @@ namespace VizNov.Viz
 
         void ShowDialog()
         {
+            if (scene.Texts.Length <= textIndex)
+            {
+                //TODO: Next scene please!
+                return;
+            }
             Domain.Text txt = scene.Texts[textIndex];
             Domain.Character chr = CharacterRoster.Get(txt.Actor);
             Avatar.sprite = chr.Avatar;
