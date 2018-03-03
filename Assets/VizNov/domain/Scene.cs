@@ -99,6 +99,24 @@ namespace VizNov.Domain
             }
         }
 
+        public string ToJSON()
+        {
+            string sid = string.IsNullOrEmpty(id) ? "" : id;
+            string ret = "{\n" + string.Format("\"id\": \"{0}\",\n\"name\": \"{1}\"", sid, image);
+            string characters = string.Join(",\n", Characters.Select(c => c.ToJSON()).ToArray());
+            if (!string.IsNullOrEmpty(characters))
+            {
+                ret += string.Format(",\n\"characters\": [\n{0}\n]", characters);
+            }
+            string stexts = string.Join(",\n", Texts.Select(t => t.ToJSON()).ToArray());
+            if (!string.IsNullOrEmpty(characters))
+            {
+                ret += string.Format(",\n\"texts\": [\n{0}\n]", stexts);
+            }
+
+            return IO.JsonLoader.Indent(ret + "\n}");
+        }
+
         public static Scene LoadFromJSON(string json)
         {
             Scene s = new Scene(IO.JsonLoader.LoadObject(json));

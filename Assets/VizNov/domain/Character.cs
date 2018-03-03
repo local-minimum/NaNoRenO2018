@@ -175,7 +175,15 @@ namespace VizNov.Domain {
         {
             string sid = string.IsNullOrEmpty(id) ? "" : id;
             string sname = string.IsNullOrEmpty(name) ? "" : name;
-            string ret = "{\n" + string.Format("\"id\": \"{0}\",\n\"name\": \"{1}\"", id, name);
+            string ret = "{\n" + string.Format("\"id\": \"{0}\",\n\"name\": \"{1}\"", sid, sname);
+            if (!string.IsNullOrEmpty(avatar))
+            {
+                ret += string.Format(",\n\"avatar\": \"{0}\"", avatar);
+            }
+            if (!string.IsNullOrEmpty(color))
+            {
+                ret += string.Format(",\n\"color\": \"{0}\"", color);
+            }
             return IO.JsonLoader.Indent(ret + "\n}");
         }
 

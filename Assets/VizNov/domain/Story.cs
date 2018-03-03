@@ -79,7 +79,7 @@ namespace VizNov.Domain
                 ret += string.Format("\n\"characters\": [\n{0}\n]", characters);
                 isListing = true;
             }
-            string scenes = string.Join(",\n", Scenes.Select(s => s.ToString()).ToArray());
+            string scenes = string.Join(",\n", Scenes.Select(s => s.ToJSON()).ToArray());
             if (!string.IsNullOrEmpty(scenes))
             {
                 if (isListing)

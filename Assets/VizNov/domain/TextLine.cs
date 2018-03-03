@@ -31,11 +31,13 @@ namespace VizNov.Domain
             if(tmp.ContainsKey("text"))
             {
                 text = tmp["text"];
+            } else
+            {
+                text = "";
             }
             
             if (tmp.ContainsKey("delay"))
             {
-                //Debug.Log(string.Format("delay: '{0}'", tmp["delay"]));
                 try
                 {
                     delay = float.Parse(tmp["delay"]);
@@ -49,6 +51,17 @@ namespace VizNov.Domain
                 delay = 0f;
             }
         }
+
+        public string ToJSON()
+        {
+            string ret = "{\n" + string.Format("\"text\": \"{0}\"", text);
+            if (delay > 0f)
+            {
+                ret += string.Format(",\n\"delay\": {0}", delay);
+            }
+            return IO.JsonLoader.Indent(ret + "\n}");
+        }
+
         void LogIssues(string json)
         {
             if (string.IsNullOrEmpty(text))

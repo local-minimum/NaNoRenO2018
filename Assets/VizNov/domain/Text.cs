@@ -48,6 +48,18 @@ namespace VizNov.Domain
             }
         }
 
+        public string ToJSON()
+        {
+            string sactor = string.IsNullOrEmpty(actor) ? "" : actor;
+            string ret = "{\n" + string.Format("\"actor\": \"{0}\"", sactor);
+            string slines = string.Join(",\n", Lines.Select(l => l.ToJSON()).ToArray());
+            if (!string.IsNullOrEmpty(slines))
+            {
+                ret += string.Format(",\n\"lines\": [\n{0}\n]", slines);
+            }
+            return IO.JsonLoader.Indent(ret + "\n}");
+        }
+
         public static Text LoadFromJSON(string json)
         {
             return new Text(IO.JsonLoader.LoadObject(json));

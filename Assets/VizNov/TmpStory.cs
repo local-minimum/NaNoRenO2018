@@ -11,18 +11,18 @@ public class TmpStory : MonoBehaviour {
             return text;
         }
     }
-    public string text = @"{
+    string text = @"{
   ""characters"": [
     {
       ""id"": ""ai:unknown"",
       ""name"": ""???"",
       ""color"": ""#01ffa4"",
-      ""image"": ""sprites/characters/ai""
+      ""avatar"": ""sprites/characters/ai""
     },
     {
       ""id"": ""ai"",
       ""name"": ""Vacuum C212"",
-      ""image"": ""sprites/characters/ai""
+      ""avatar"": ""sprites/characters/ai""
     }
   ],
   ""scenes"": [
@@ -32,7 +32,7 @@ public class TmpStory : MonoBehaviour {
         {
           ""id"": ""plant in pot"",
           ""name"": ""Plant in a pot"",
-          ""image"": ""sprites/characters/potPlant""
+          ""avatar"": ""sprites/characters/potPlant""
         }
       ],
       ""image"": ""sprites/scenes/hallway"",
