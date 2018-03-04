@@ -26,25 +26,45 @@ namespace VizNov.Domain
             }
         }
 
+        private float delay;
+        public float Delay
+        {
+            get
+            {
+                return delay;
+            }
+        }
+
         public Text(Dictionary<string, string> tmp)
         {
             if (tmp.ContainsKey("lines"))
             {
                 lines = tmp["lines"];
                 _lines = TextLine.LoadManyFromJSON(lines);
-            } else
+            }
+            else
             {
                 lines = "";
                 _lines = new TextLine[0];
-                Debug.LogWarning(string.Format("Empty conversation {0}", this));
             }
             if (tmp.ContainsKey("actor"))
             {
                 actor = tmp["actor"];
             }
+            if (tmp.ContainsKey("delay"))
+            {
+                try
+                {
+                    delay = float.Parse(tmp["delay"]);
+                }
+                catch (System.FormatException)
+                {
+                    delay = -1;
+                }
+            }
             else
             {
-                Debug.LogError(string.Format("No one is saying: {1}", lines));
+                delay = 0f;
             }
         }
 
@@ -57,12 +77,33 @@ namespace VizNov.Domain
             {
                 ret += string.Format(",\n\"lines\": [\n{0}\n]", slines);
             }
+            if (delay > 0f)
+            {
+                ret += string.Format(",\n\"delay\": {0}", delay);
+            }
             return IO.JsonLoader.Indent(ret + "\n}");
+        }
+
+        void LogIssues(string json)
+        {
+            if (_lines.Length == 0)
+            {
+                Debug.LogWarning(string.Format("Empty conversation/no lines: {0}", json));
+            }
+            if (string.IsNullOrEmpty(actor)) {
+                Debug.LogError(string.Format("No one is saying: {0}", json));
+            }
+            if (delay < 0f)
+            {
+                Debug.LogError(string.Format("Failed to set delay from: {0}", json));
+            }
         }
 
         public static Text LoadFromJSON(string json)
         {
-            return new Text(IO.JsonLoader.LoadObject(json));
+            Text t = new Text(IO.JsonLoader.LoadObject(json));
+            t.LogIssues(json);
+            return t;
         }
 
         public static Text[] LoadManyFromJSON(string json)

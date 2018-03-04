@@ -38,6 +38,7 @@ public class TmpStory : MonoBehaviour {
       ""image"": ""sprites/scenes/hallway"",
       ""texts"": [
         {
+          ""delay"": 2,
           ""actor"": ""ai:unknown"",
           ""lines"": [
             {
@@ -46,6 +47,7 @@ public class TmpStory : MonoBehaviour {
           ]
         },
         {
+          ""delay"": 0.5,
           ""actor"": ""plant in pot"",
           ""lines"": [
             {
@@ -54,6 +56,7 @@ public class TmpStory : MonoBehaviour {
           ]
         },
         {
+          ""delay"": 0.5,
           ""actor"": ""ai:unknown"",
           ""lines"": [
             {
@@ -66,6 +69,7 @@ public class TmpStory : MonoBehaviour {
           ]
         },
         {
+          ""delay"": 0.5,
           ""actor"": ""plant in pot"",
           ""lines"": [
             {
@@ -74,6 +78,7 @@ public class TmpStory : MonoBehaviour {
           ]
         },
         {
+          ""delay"": 0.5,
           ""actor"": ""ai"",
           ""lines"": [
             {
@@ -82,10 +87,15 @@ public class TmpStory : MonoBehaviour {
           ]
         },
         {
+          ""delay"": 0.5,
           ""actor"": ""plant in pot"",
           ""lines"": [
             {
-              ""text"": ""... no""
+              ""text"": ""...""
+            },
+            {
+              ""delay"": 1.5,
+              ""text"": ""NO""
             }
           ]
         }

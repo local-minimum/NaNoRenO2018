@@ -148,12 +148,21 @@ namespace VizNov.Viz
             Convo.SetActive(false);
             NextButton.gameObject.SetActive(false);
             Domain.Character chr = CharacterRoster.Get(txt.Actor);
-            Avatar.sprite = chr.Avatar;
-            Avatar.color = Color.white;
-            AvatarBackground.color = chr.Color;
+            if (chr.Avatar)
+            {
+                Avatar.sprite = chr.Avatar;
+                Avatar.color = Color.white;
+                AvatarBackground.color = chr.Color;
+                AvatarBackground.gameObject.SetActive(true);
+                Avatar.gameObject.SetActive(true);
+            }
+            else {
+                Avatar.gameObject.SetActive(false);
+                AvatarBackground.gameObject.SetActive(false);
+            }
             CharacterName.text = chr.Name;
             CharacterNameBg.color = chr.Color;
-            // yield return new WaitForSeconds(txt.Delay)
+            yield return new WaitForSeconds(txt.Delay);
             Convo.SetActive(true);
 
             Lines.text = "";

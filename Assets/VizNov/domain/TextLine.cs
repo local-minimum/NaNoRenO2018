@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -43,7 +42,7 @@ namespace VizNov.Domain
                     delay = float.Parse(tmp["delay"]);
                 } catch (System.FormatException)
                 {
-                    Debug.LogError(string.Format("Trying to set delay to: '{0}'", tmp["delay"]));
+                    delay = -1;
                 }
             }
             else
@@ -67,6 +66,10 @@ namespace VizNov.Domain
             if (string.IsNullOrEmpty(text))
             {
                 Debug.LogError(string.Format("No text in text-line: {0}", json));
+            }
+            if (delay < 0f)
+            {
+                Debug.LogError(string.Format("Failed to set delay from: {0}", json));
             }
         }
 
