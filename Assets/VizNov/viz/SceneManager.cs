@@ -31,6 +31,9 @@ namespace VizNov.Viz
         Image Avatar;
 
         [SerializeField]
+        Image AvatarBackground;
+
+        [SerializeField]
         Text CharacterName;
 
         [SerializeField]
@@ -41,6 +44,9 @@ namespace VizNov.Viz
 
         [SerializeField]
         GameObject Convo;
+
+        [SerializeField]
+        Button NextButton;
 
         Domain.Scene scene;
 
@@ -53,7 +59,8 @@ namespace VizNov.Viz
             else
             {
                 _instance = this;
-                Convo.SetActive(false);
+                //Convo.SetActive(false);
+                //NextButton.gameObject.SetActive(false);
             }
         }
 
@@ -85,7 +92,7 @@ namespace VizNov.Viz
             EmitCharacters(type);
             if (type == EventType.Start)
             {
-                Debug.Log(string.Join(", ", CharacterRoster.AllId));
+                //NextButton.gameObject.SetActive(false);
                 Scene.sprite = scene.Image;
                 Scene.color = Color.white;
                 textIndex = 0;
@@ -115,38 +122,55 @@ namespace VizNov.Viz
         {
             if (scene.Texts.Length <= textIndex)
             {
-                //TODO: Next scene please!
                 return;
             }
             Domain.Text txt = scene.Texts[textIndex];
-            Domain.Character chr = CharacterRoster.Get(txt.Actor);
-            Avatar.sprite = chr.Avatar;
-            Avatar.color = Color.white;
-            CharacterName.text = chr.Name;
-            CharacterNameBg.color = chr.Color;
-            Background.color = Color.white;
-            StartCoroutine(_PlayLines(txt.Lines));
-            Convo.SetActive(true);
+            StartCoroutine(_PlayText(txt));
+        }
+
+        public void NextLines()
+        {
+            //NextButton.gameObject.SetActive(false);
+            textIndex += 1;
+            if (textIndex >= scene.Texts.Length)
+            {
+                //TODO Scene end
+            } else
+            {
+                StartCoroutine(_PlayText(scene.Texts[textIndex]));
+            }
         }
 
         int textIndex = 0;
 
-        IEnumerator<WaitForSeconds> _PlayLines(Domain.TextLine[] lines)
+        IEnumerator<WaitForSeconds> _PlayText(Domain.Text txt)
         {
+            Convo.SetActive(false);
+            NextButton.gameObject.SetActive(false);
+            Domain.Character chr = CharacterRoster.Get(txt.Actor);
+            Avatar.sprite = chr.Avatar;
+            Avatar.color = Color.white;
+            AvatarBackground.color = chr.Color;
+            CharacterName.text = chr.Name;
+            CharacterNameBg.color = chr.Color;
+            // yield return new WaitForSeconds(txt.Delay)
+            Convo.SetActive(true);
+
             Lines.text = "";
-            for (int i=0; i<lines.Length; i++)
+            for (int i=0; i<txt.Lines.Length; i++)
             {
                 if (i > 0)
                 {
                     Lines.text += "\n";
                 }
-                Domain.TextLine line = lines[i];
+                Domain.TextLine line = txt.Lines[i];
                 if (line.Delay > 0f)
                 {
                     yield return new WaitForSeconds(line.Delay);
                 }
                 Lines.text += line.Text;
             }
+            NextButton.gameObject.SetActive(true);
         }
     }
 }

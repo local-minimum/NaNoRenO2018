@@ -21,7 +21,7 @@ public class TmpStory : MonoBehaviour {
     },
     {
       ""id"": ""ai"",
-      ""name"": ""Vacuum C212"",
+      ""name"": ""Elevator 5322"",
       ""avatar"": ""sprites/characters/ai""
     }
   ],
@@ -61,7 +61,7 @@ public class TmpStory : MonoBehaviour {
             },
             {
               ""delay"": 0.5,
-              ""text"": ""I’m Vacuum C212 by the way.""
+              ""text"": ""I’m Elevator 5322 by the way.""
             }
           ]
         },
