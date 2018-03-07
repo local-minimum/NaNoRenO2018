@@ -104,7 +104,7 @@ namespace VizNov.Domain
             return ret;
         }
 
-        public string ToJSON()
+        public virtual string ToJSON()
         {
             switch (effectType) {
                 case EffectType.Animation:
@@ -199,19 +199,157 @@ namespace VizNov.Domain
         }
     }
 
+    public enum AnimationEffectType { None, Trigger, Bool, Float };
+
     public class EffectAnimation : Effect {
+
+        private AnimationEffectType type;
+        public AnimationEffectType animationEffectType
+        {
+            get
+            {
+                return type;
+            }
+        }
+
+        private string trigger;
+        public string Trigger
+        {
+            get
+            {
+                return trigger;
+            }
+        }
+
+        private bool boolean;
+        public bool BooleanValue
+        {
+            get
+            {
+                return boolean;
+            }
+        }
+
+        private float _float;
+        public float FloatValue
+        {
+            get
+            {
+                return _float;
+            }
+        }
+
         public EffectAnimation(Dictionary<string, string> tmp)
         {
+            if (tmp.ContainsKey("trigger"))
+            {
+                trigger = tmp["trigger"];
+                type = AnimationEffectType.Trigger;
+            } else if (tmp.ContainsKey("bool"))
+            {
+                try
+                {
+                    boolean = bool.Parse(tmp["bool"]);
+                } catch (System.FormatException)
+                {
+                    Debug.LogError(string.Format("Animation Effect got malformed bool: {0}", tmp["bool"]));
+                } finally {
+                    type = AnimationEffectType.Bool;
+                }
+            } else if (tmp.ContainsKey("float"))
+            {
+                try
+                {
+                    _float = float.Parse(tmp["float"]);
+                }
+                catch (System.FormatException)
+                {
+                    Debug.LogError(string.Format("Animation Effect could not parse float: {0}", tmp["float"]));
+                }
+                finally
+                {
+                    type = AnimationEffectType.Float;
+                }
+            } else
+            {
+                Debug.LogError("Animation Effect doesn't have any effect (trigger/bool/float)");
+            }
+        }
 
+        public override string ToJSON()
+        {
+            string ret = "{\n" + ToInnerJSON();
+            switch (animationEffectType)
+            {
+                case AnimationEffectType.Bool:
+                    ret += string.Format(",\n  \"bool\": \"{0}\"", BooleanValue);
+                    break;
+                case AnimationEffectType.Trigger:
+                    ret += string.Format(",\n  \"trigger\": \"{0}\"", Trigger);
+                    break;
+                case AnimationEffectType.Float:
+                    ret += string.Format(",\n  \"float\": \"{0}\"", FloatValue);
+                    break;
+            }
+            return IO.JsonLoader.Indent(ret + ",\n}");
         }
     }
 
+    public enum SoundEffectType { None, Play, PlayOneShot };
+
     public class EffectSound : Effect
     {
-        private string trigger;
+        static SoundEffectType GetSoundEffectType(string value)
+        {
+            switch(value.ToLower())
+            {
+                case "play":
+                    return SoundEffectType.Play;
+                case "playoneshot":
+                    return SoundEffectType.PlayOneShot;
+                default:
+                    Debug.LogError(string.Format("Sound Effect could not parse soundEffectType: {0}", value));
+                    return SoundEffectType.None;
+            }
+        }
+
+        private string _soundEffectType;
+        private SoundEffectType soundEffectType;
+        public SoundEffectType SoundEffectType
+        {
+            get
+            {
+                return soundEffectType;
+            }
+        }
+
+        private string __audioSource;
+        private AudioSource _audioSource;
+        public AudioSource audioSource
+        {
+            get
+            {
+                return _audioSource;
+            }
+        }
 
         public EffectSound(Dictionary<string, string> tmp)
-        {            
+        {
+            if (tmp.ContainsKey("soundEffectType"))
+            {
+                _soundEffectType = tmp["soundEffectType"];
+                soundEffectType = GetSoundEffectType(_soundEffectType);
+            } else
+            {
+                Debug.LogError("Sound Effect didn't get a soundEffectType");
+            }
+
+            //TODO: continue with audiosource from resources
+        }
+
+        public override string ToJSON()
+        {
+            return ToInnerJSON();
         }
     }
 
