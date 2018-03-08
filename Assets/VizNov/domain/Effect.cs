@@ -344,20 +344,129 @@ namespace VizNov.Domain
                 Debug.LogError("Sound Effect didn't get a soundEffectType");
             }
 
-            //TODO: continue with audiosource from resources
+            if (tmp.ContainsKey("audioSource"))
+            {
+                __audioSource = tmp["audioSource"];
+                _audioSource = Resources.Load<AudioSource>(__audioSource);
+            }
         }
 
         public override string ToJSON()
         {
-            return ToInnerJSON();
+            string ret = "{\n" + ToInnerJSON();
+            ret += string.Format(",\n  \"soundEffectType\": \"{0}\"", _soundEffectType);
+            if (!string.IsNullOrEmpty(__audioSource)) {
+                ret += string.Format(",\n  \"audioSource\": \"{0}\"", __audioSource);
+            }
+            return IO.JsonLoader.Indent(ret + ",\n}");
         }
     }
 
+    public enum StoryEffectType { None, Float, Int, String, Boolean };
     public class EffectStory : Effect
     {
+        private string action;
+        public string Action
+        {
+            get
+            {
+                return action;
+            }
+        }
+
+        static StoryEffectType GetStoryEffectType(string value)
+        {
+            switch(value.ToLower())
+            {
+                case "float":
+                    return StoryEffectType.Float;
+                case "int":
+                    return StoryEffectType.Int;
+                case "string":
+                    return StoryEffectType.String;
+                case "boolean":
+                    return StoryEffectType.Boolean;
+                default:
+                    return StoryEffectType.None;
+            }
+        }
+        private string __storyEffectType;
+        private StoryEffectType _storyEffectType;
+        public StoryEffectType storyEffectType
+        {
+            get
+            {
+                return _storyEffectType;
+            }
+        }
+
+        private string value;
+        public string StringValue
+        {
+            get
+            {
+                return value;
+            }
+        }
+        public bool BooleanValue
+        {
+            get
+            {
+                return bool.Parse(value);
+            }
+        }
+        public int IntValue
+        {
+            get
+            {
+                return int.Parse(value);
+            }
+        }
+        public float FloatValue
+        {
+            get
+            {
+                return float.Parse(value);
+            }
+        }
+
+
         public EffectStory(Dictionary<string, string> tmp)
         {
+            if (tmp.ContainsKey("action"))
+            {
+                action = tmp["action"];
+            } else
+            {
+                Debug.LogError(string.Format("Story Effect doesn't have an action"));
+            }
+            if (tmp.ContainsKey("value"))
+            {
+                value = tmp["value"];
+            }
+            if (tmp.ContainsKey("storyEffectType"))
+            {
+                __storyEffectType = tmp["storyEffectType"];
+                _storyEffectType = GetStoryEffectType(__storyEffectType);
+            }
+        }
 
+        public override string ToJSON()
+        {
+            string ret = "{\n" + base.ToJSON();
+            if (string.IsNullOrEmpty(action))
+            {
+                ret += string.Format(",\n  \"action\": \"{0}\"", action);
+            }
+            if (string.IsNullOrEmpty(value))
+            {
+                ret += string.Format(",\n  \"value\": \"{0}\"", value);
+            }
+            if (storyEffectType != StoryEffectType.None)
+            {
+                ret += string.Format(",\n  \"storyEffectType\": \"{0}\"", __storyEffectType);
+            }
+            return IO.JsonLoader.Indent(ret + "\n}");
         }
     }
 }
