@@ -26,6 +26,15 @@ namespace VizNov.Domain
             }
         }
 
+        private ChoiceOption[] _choices;
+        public ChoiceOption[] Choices
+        {
+            get
+            {
+                return _choices;
+            }
+        }
+
         private float delay;
         public float Delay
         {
@@ -47,6 +56,14 @@ namespace VizNov.Domain
                 lines = "";
                 _lines = new TextLine[0];
             }
+            if (tmp.ContainsKey("choices"))
+            {
+                _choices = ChoiceOption.LoadManyFromJSON(tmp["choices"]);
+            } else
+            {
+                _choices = new ChoiceOption[0];
+            }
+
             if (tmp.ContainsKey("actor"))
             {
                 actor = tmp["actor"];
@@ -72,10 +89,15 @@ namespace VizNov.Domain
         {
             string sactor = string.IsNullOrEmpty(actor) ? "" : actor;
             string ret = "{\n" + string.Format("\"actor\": \"{0}\"", sactor);
-            string slines = string.Join(",\n", Lines.Select(l => l.ToJSON()).ToArray());
-            if (!string.IsNullOrEmpty(slines))
+            if (Lines.Length > 0)
             {
-                ret += string.Format(",\n\"lines\": [\n{0}\n]", slines);
+                string lines = string.Join(",\n", Lines.Select(l => l.ToJSON()).ToArray());
+                ret += string.Format(",\n\"lines\": [\n{0}\n]", lines);
+            }
+            if (Choices.Length > 0)
+            {
+                string choices = string.Join(",\n", Choices.Select(c => c.ToJSON()).ToArray());
+                ret += string.Format(",\n\"choices\": [\n{0}\n]", choices);
             }
             if (delay > 0f)
             {
@@ -86,9 +108,9 @@ namespace VizNov.Domain
 
         void LogIssues(string json)
         {
-            if (_lines.Length == 0)
+            if (Lines.Length == 0 && Choices.Length == 0)
             {
-                Debug.LogWarning(string.Format("Empty conversation/no lines: {0}", json));
+                Debug.LogWarning(string.Format("Empty conversation/no lines no choices: {0}", json));
             }
             if (string.IsNullOrEmpty(actor)) {
                 Debug.LogError(string.Format("No one is saying: {0}", json));
