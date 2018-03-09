@@ -130,7 +130,7 @@ namespace VizNov.Domain
 
         public static Text[] LoadManyFromJSON(string json)
         {
-            return IO.JsonLoader.LoadArr(json).Select(e => Text.LoadFromJSON(e)).ToArray();
+            return IO.JsonLoader.LoadArr(json).Select(e => LoadFromJSON(e)).ToArray();
         }
     }
 }

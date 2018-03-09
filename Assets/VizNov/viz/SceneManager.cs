@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 namespace VizNov.Viz
 {
+    public delegate void EffectEvent(Domain.Effect effect);
+    public delegate void ChoicesEvent(Domain.ChoiceOption[] choices, System.Action<int> callback);
+
     public class SceneManager : MonoBehaviour
     {
         static SceneManager _instance;
@@ -20,6 +23,8 @@ namespace VizNov.Viz
         }
 
         public event CharacterEvent OnCharacter;
+        public event EffectEvent OnEffect;
+        public event ChoicesEvent OnChoices;
 
         [SerializeField]
         Image Scene;
@@ -59,8 +64,6 @@ namespace VizNov.Viz
             else
             {
                 _instance = this;
-                //Convo.SetActive(false);
-                //NextButton.gameObject.SetActive(false);
             }
         }
 
@@ -92,7 +95,6 @@ namespace VizNov.Viz
             EmitCharacters(type);
             if (type == EventType.Start)
             {
-                //NextButton.gameObject.SetActive(false);
                 Scene.sprite = scene.Image;
                 Scene.color = Color.white;
                 textIndex = 0;
@@ -102,6 +104,7 @@ namespace VizNov.Viz
 
         void ExitScene()
         {
+            txt = null;
             EmitCharacters(EventType.End);            
         }
 
@@ -128,13 +131,12 @@ namespace VizNov.Viz
             StartCoroutine(_PlayText(txt));
         }
 
-        public void NextLines()
+        public void NextText()
         {
-            //NextButton.gameObject.SetActive(false);
             textIndex += 1;
             if (textIndex >= scene.Texts.Length)
             {
-                //TODO Scene end
+                ExitScene();
             } else
             {
                 StartCoroutine(_PlayText(scene.Texts[textIndex]));
@@ -143,8 +145,11 @@ namespace VizNov.Viz
 
         int textIndex = 0;
 
+        Domain.Text txt;
+
         IEnumerator<WaitForSeconds> _PlayText(Domain.Text txt)
         {
+            this.txt = txt;
             Convo.SetActive(false);
             NextButton.gameObject.SetActive(false);
             Domain.Character chr = CharacterRoster.Get(txt.Actor);
@@ -166,20 +171,45 @@ namespace VizNov.Viz
             Convo.SetActive(true);
 
             Lines.text = "";
-            for (int i=0; i<txt.Lines.Length; i++)
+            for (int lineIndex=0; lineIndex<txt.Lines.Length; lineIndex++)
             {
-                if (i > 0)
+                if (lineIndex > 0)
                 {
                     Lines.text += "\n";
                 }
-                Domain.TextLine line = txt.Lines[i];
+                Domain.TextLine line = txt.Lines[lineIndex];
                 if (line.Delay > 0f)
                 {
                     yield return new WaitForSeconds(line.Delay);
                 }
                 Lines.text += line.Text;
             }
-            NextButton.gameObject.SetActive(true);
+
+            if (txt.Choices.Length > 0)
+            {
+                if (OnChoices != null)
+                {
+                    OnChoices(txt.Choices, EmitChoice);
+                } else
+                {
+                    Debug.LogError(string.Format("SceneManager has no-one to take care of choices, story halts at: {0}", txt.ToJSON()));
+                }
+            }
+            else
+            {
+                NextButton.gameObject.SetActive(true);
+            }
+        }
+
+        void EmitChoice(int index)
+        {
+            if (OnEffect != null) {
+                Domain.ChoiceOption choice = txt.Choices[index];
+                for (int i = 0; i < choice.Effects.Length; i++)
+                {
+                    OnEffect(choice.Effects[i]);
+                }
+            }
         }
     }
 }

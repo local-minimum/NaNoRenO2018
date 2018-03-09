@@ -98,8 +98,7 @@ namespace VizNov.Domain
             } else
             {
                 return ret + "}";
-            }
-            
+            }            
         }
     }
 }

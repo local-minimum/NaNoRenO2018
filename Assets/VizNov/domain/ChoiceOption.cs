@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace VizNov.Domain
 {
-    public class ChoiceOption : MonoBehaviour
+    public class ChoiceOption
     {
         private string text;
         public string Text
