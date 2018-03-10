@@ -34,16 +34,17 @@ namespace VizNov.Viz
         System.Action<int> callback;
         private void HandleChoices(Domain.ChoiceOption[] choices, System.Action<int> callback)
         {
+            choicesContainer.SetActive(true);
             this.callback = callback;
             int choiceIndex;
             for(choiceIndex = 0; choiceIndex < choices.Length; choiceIndex++)
             {
                 if (choiceIndex == this.choices.Count)
                 {
-                    this.choices.Add(GetNewChoiceButton());
+                    this.choices.Add(GetNewChoiceButton(choiceIndex));
                 }
 
-                this.choices[choiceIndex].gameObject.SetActive(false);
+                this.choices[choiceIndex].gameObject.SetActive(true);
 
             }
             while (choiceIndex < this.choices.Count)
@@ -51,12 +52,28 @@ namespace VizNov.Viz
                 this.choices[choiceIndex].gameObject.SetActive(false);
                 choiceIndex++;
             }
-            throw new System.NotImplementedException();
         }
 
-        Button GetNewChoiceButton()
+        public void Clicking(int index)
         {
-            return choicesContainer.AddComponent<Button>();
+            Debug.Log(index);
+            //choicesContainer.SetActive(false);
+            callback(index);
+        }
+
+        Button GetNewChoiceButton(int index)
+        {
+            GameObject GO = new GameObject();
+            GO.transform.SetParent(choicesContainer.transform);
+            LayoutElement le = GO.AddComponent<LayoutElement>();
+            le.flexibleHeight = 1;
+            Button btn = GO.AddComponent<Button>();
+            Image img = GO.AddComponent<Image>();
+            btn.image = img;
+            img.color = Color.red;
+            btn.onClick = new Button.ButtonClickedEvent();
+            btn.onClick.AddListener(delegate() { Clicking(index); });
+            return btn;
         }
     }
 }

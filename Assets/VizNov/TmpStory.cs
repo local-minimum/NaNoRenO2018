@@ -44,6 +44,14 @@ public class TmpStory : MonoBehaviour {
             {
               ""text"": ""You look a bit sad today.""
             }
+          ],
+          ""choices"": [
+            {
+              ""text"": ""Opt1""
+            },
+            {
+              ""text"": ""Opt2""
+            },
           ]
         },
         {
